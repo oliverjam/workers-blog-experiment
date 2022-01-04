@@ -3,5 +3,5 @@
 # source .env
 
 ./node_modules/.bin/wrangler pages dev . \
-  --kv TEST \
+  --kv DB \
   --proxy 3333
