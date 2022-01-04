@@ -1,0 +1,12 @@
+{
+  "name": "oliverjames-v4",
+  "private": true,
+  "scripts": {
+    "dev": "./scripts/dev"
+  },
+  "author": "Oliver Phillips <hello@oliverjam.es> (https://oliverjam.es/)",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^0.0.0-e9a1820"
+  }
+}

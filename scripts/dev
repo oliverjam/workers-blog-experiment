@@ -1,0 +1,7 @@
+#! /bin/sh
+
+# source .env
+
+./node_modules/.bin/wrangler pages dev . \
+  --kv TEST \
+  --proxy 3333
