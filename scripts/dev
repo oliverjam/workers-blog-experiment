@@ -1,7 +1,8 @@
 #! /bin/sh
 
-# source .env
+source .env
 
 ./node_modules/.bin/wrangler pages dev . \
   --kv DB \
+  --binding ADMIN_PW=$ADMIN_PW
   --proxy 3333

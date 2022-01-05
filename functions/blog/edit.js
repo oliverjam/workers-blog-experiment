@@ -1,7 +1,10 @@
 import { html, send } from "../../lib/helpers.js";
 import { list } from "../../lib/model/post.js";
+import { auth } from "../../lib/auth.js";
 
-export async function onRequestGet({ env }) {
+export const onRequestGet = [auth, get];
+
+async function get({ env }) {
   let posts = await list(env.DB);
   let title = "Blog posts";
   let body = html`

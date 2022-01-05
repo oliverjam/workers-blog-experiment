@@ -1,7 +1,11 @@
+import { auth } from "../../lib/auth.js";
 import { html, redirect, send } from "../../lib/helpers.js";
 import { create } from "../../lib/model/post.js";
 
-export async function onRequestGet({ env }) {
+export const onRequestGet = [auth, get];
+export const onRequestPost = [auth, post];
+
+export async function get() {
   let title = "New post";
   let body = html`
     <h1>${title}</h1>
@@ -18,7 +22,7 @@ export async function onRequestGet({ env }) {
   return send(title, body);
 }
 
-export async function onRequestPost({ request, env }) {
+export async function post({ request, env }) {
   let body = await request.formData();
   let slug = await create(env.DB, body);
   return redirect(`/blog/${slug}`);
