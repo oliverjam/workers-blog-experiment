@@ -1,10 +1,9 @@
-import { parse } from "../lib/cookie.js";
 import { html, redirect, send } from "../lib/helpers.js";
 import { create } from "../lib/model/session.js";
+import { session_cookie, flash_cookie } from "../lib/cookies.js";
 
 export function onRequestGet({ request }) {
-  let cookies = parse(request.headers.get("cookie"));
-  let flash = cookies && cookies.get("flash");
+  let flash = flash_cookie.read(request.headers.get("cookie"));
   let title = "Log in";
   let body = html`
     <h1>${title}</h1>
@@ -25,8 +24,7 @@ export function onRequestGet({ request }) {
   `;
   let response = send(title, body);
   if (flash) {
-    let cookie = `flash=0; Path=/; HttpOnly; MaxAge=0`;
-    response.headers.append("set-cookie", cookie);
+    response.headers.append("set-cookie", flash_cookie.clear());
   }
   return response;
 }
@@ -35,12 +33,13 @@ export async function onRequestPost({ request, env }) {
   let body = await request.formData();
   let pw = body.get("pw");
   if (pw !== env.ADMIN_PW) {
-    let cookie = `flash=pw_error; Path=/; HttpOnly`;
-    return redirect("/login", { headers: { "set-cookie": cookie } });
+    return redirect("/login", {
+      headers: { "set-cookie": flash_cookie.write("pw_error") },
+    });
   } else {
-    let sid = await create(env.DB, JSON.stringify({ role: "admin" }));
-    let one_week = 1000 * 60 * 60 * 24 * 7;
-    let cookie = `sid=${sid}; Path=/; Max-Age=${one_week}; HttpOnly`;
-    return redirect("/blog/edit", { headers: { "set-cookie": cookie } });
+    let sid = await create(env.DB, { role: "admin" });
+    return redirect("/blog/edit", {
+      headers: { "set-cookie": session_cookie.write(sid) },
+    });
   }
 }
