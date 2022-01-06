@@ -9,6 +9,7 @@ async function get({ env }) {
   let title = "Blog posts";
   let body = html`
     <h1>${title}</h1>
+    <form action="/logout" method="POST"><button>Log out</button></form>
     <a href="new">New post</a>
     <ul>
       ${posts
